@@ -15,14 +15,16 @@ class RequestManager {
 
   RequestManager._() {
     // 具体初始化代码
-    //忽略https证书验证
-    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) {
-        return true;
+    //忽略https证书验证,仅对App有效，对web无效
+    /*if (_dio.httpClientAdapter.runtimeType is DefaultHttpClientAdapter) {
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+          return true;
+        };
       };
-    };
+    }*/
     _dio.interceptors.add(ErrorInterceptor());
     _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
   }

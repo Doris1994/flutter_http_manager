@@ -27,7 +27,7 @@ abstract class BaseHttpRequest {
   String get baseUrl;
 
   Map<String, dynamic> get headers => {};
-  dynamic parameters;
+  Map<String, dynamic>? get parameters;
 
   //SuccessCallback? get successCallback => _successCallback;
   //FailureCallback? get failureCallback => _failureCallback;

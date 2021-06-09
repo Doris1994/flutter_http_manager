@@ -6,5 +6,8 @@ class LoginRequest extends BaseHttpRequest
 
   @override
   String get baseUrl => '';
+
+  @override
+  Map<String, dynamic>? get parameters => null;
  
 }
