@@ -29,8 +29,8 @@ abstract class BaseHttpRequest {
   Map<String, dynamic> get headers => {};
   Map<String, dynamic>? get parameters;
 
-  //SuccessCallback? get successCallback => _successCallback;
-  //FailureCallback? get failureCallback => _failureCallback;
+  SuccessCallback? get successCallback => _successCallback;
+  FailureCallback? get failureCallback => _failureCallback;
   ProgressCallback? get progressCallback => _progressCallback;
 
   void _start() {
@@ -47,11 +47,11 @@ abstract class BaseHttpRequest {
     _start();
   }
 
-  void didFinishSuccess(dynamic value) {
+  didFinishSuccess(dynamic value) {
     _successCallback?.call(value);
   }
 
-  void didFinishFailure(RequestException error) {
+  didFinishFailure(RequestException error) {
     _failureCallback?.call(error);
   }
 
