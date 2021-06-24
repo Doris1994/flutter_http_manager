@@ -25,6 +25,7 @@ abstract class BaseHttpRequest {
   BaseHttpRequest(this.path, {this.method = HttpRequestMethod.get});
 
   String get baseUrl;
+  String get pathParameters => '';//例如 /product/:id
 
   Map<String, dynamic> get headers => {};
   Map<String, dynamic>? get parameters;

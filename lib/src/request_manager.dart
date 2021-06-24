@@ -37,7 +37,7 @@ class RequestManager {
   }
 
   void addRequest(BaseHttpRequest request) {
-    String url = request.baseUrl + request.path;
+    String url = request.baseUrl + request.path + request.pathParameters;
     Options options = Options(
         sendTimeout: request.sendTimeout,
         receiveTimeout: request.receiveTimeout,
