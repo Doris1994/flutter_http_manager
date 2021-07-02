@@ -25,10 +25,10 @@ abstract class BaseHttpRequest {
   BaseHttpRequest(this.path, {this.method = HttpRequestMethod.get});
 
   String get baseUrl;
-  String get pathParameters => '';//例如 /product/:id
+  String get pathParameters => ''; //例如 /product/:id
 
   Map<String, dynamic> get headers => {};
-  Map<String, dynamic>? get parameters;
+  dynamic get parameters;
 
   SuccessCallback? get successCallback => _successCallback;
   FailureCallback? get failureCallback => _failureCallback;
