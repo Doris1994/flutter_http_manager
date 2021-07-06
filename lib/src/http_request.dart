@@ -45,7 +45,7 @@ abstract class BaseHttpRequest {
     _start();
   }
 
-  didFinishSuccess(dynamic value) {
+  didFinishSuccess(Response<dynamic> value) {
     _successCallback?.call(value);
   }
 

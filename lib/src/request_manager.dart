@@ -86,6 +86,6 @@ class RequestManager {
 
   void _responseHandler(BaseHttpRequest request, Response<dynamic> value) {
     request.status = HttpRequestStatus.finished;
-    request.didFinishSuccess(value.data);
+    request.didFinishSuccess(value);
   }
 }
