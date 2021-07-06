@@ -9,8 +9,6 @@ typedef SuccessCallback = void Function(dynamic value);
 typedef FailureCallback = void Function(RequestException exception);
 
 abstract class BaseHttpRequest {
-  final String path;
-  final HttpRequestMethod method;
   int sendTimeout = 3000;
   int receiveTimeout = 3000;
   int connectTimeout = 5000;
@@ -22,13 +20,12 @@ abstract class BaseHttpRequest {
 
   HttpRequestStatus status = HttpRequestStatus.unknown;
 
-  BaseHttpRequest(this.path, {this.method = HttpRequestMethod.get});
-
   String get baseUrl;
-  String get pathParameters => ''; //例如 /product/:id
+  String get path;
+  HttpRequestMethod get method => HttpRequestMethod.get;
 
   Map<String, dynamic> get headers => {};
-  dynamic get parameters;
+  dynamic get parameters => null;
 
   SuccessCallback? get successCallback => _successCallback;
   FailureCallback? get failureCallback => _failureCallback;
