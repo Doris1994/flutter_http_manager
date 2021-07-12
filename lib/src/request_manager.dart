@@ -48,22 +48,32 @@ class RequestManager {
           {
             _dio
                 .get(url,
-                    queryParameters: request.parameters,
-                    cancelToken: request.token,
-                    onReceiveProgress: request.progressCallback,
-                    options: options)
-                .then((value) => _responseHandler(request, value));
+                queryParameters: request.parameters,
+                cancelToken: request.token,
+                onReceiveProgress: request.progressCallback,
+                options: options)
+                .then((value) => _responseHandler(request, value))
+                .onError((error, stackTrace) {
+              if (error is DioError) {
+                _errorHandler(request, error);
+              }
+            });
           }
           break;
         case HttpRequestMethod.post:
           {
             _dio
                 .post(url,
-                    data: request.parameters,
-                    cancelToken: request.token,
-                    onSendProgress: request.progressCallback,
-                    options: options)
-                .then((value) => _responseHandler(request, value));
+                data: request.parameters,
+                cancelToken: request.token,
+                onSendProgress: request.progressCallback,
+                options: options)
+                .then((value) => _responseHandler(request, value))
+                .onError((error, stackTrace) {
+              if (error is DioError) {
+                _errorHandler(request, error);
+              }
+            });
           }
           break;
         default:
