@@ -13,6 +13,8 @@ class RequestManager {
 
   static RequestManager? _instance;
 
+  Interceptor? _refreshTokenInterceptor;
+
   RequestManager._() {
     // 具体初始化代码
     //忽略https证书验证,仅对App有效，对web无效
@@ -27,6 +29,7 @@ class RequestManager {
     }*/
     _dio.interceptors.add(ErrorInterceptor());
     _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
+    init(_refreshTokenInterceptor);
   }
 
   static RequestManager _sharedInstance() {
@@ -34,6 +37,13 @@ class RequestManager {
       _instance = RequestManager._();
     }
     return _instance!;
+  }
+
+  void init(Interceptor? interceptor) {
+    _refreshTokenInterceptor = interceptor;
+    if (_refreshTokenInterceptor != null) {
+      _dio.interceptors.add(_refreshTokenInterceptor!);
+    }
   }
 
   void addRequest(BaseHttpRequest request) {
@@ -48,10 +58,10 @@ class RequestManager {
           {
             _dio
                 .get(url,
-                queryParameters: request.parameters,
-                cancelToken: request.token,
-                onReceiveProgress: request.progressCallback,
-                options: options)
+                    queryParameters: request.parameters,
+                    cancelToken: request.token,
+                    onReceiveProgress: request.progressCallback,
+                    options: options)
                 .then((value) => _responseHandler(request, value))
                 .onError((error, stackTrace) {
               if (error is DioError) {
@@ -64,10 +74,10 @@ class RequestManager {
           {
             _dio
                 .post(url,
-                data: request.parameters,
-                cancelToken: request.token,
-                onSendProgress: request.progressCallback,
-                options: options)
+                    data: request.parameters,
+                    cancelToken: request.token,
+                    onSendProgress: request.progressCallback,
+                    options: options)
                 .then((value) => _responseHandler(request, value))
                 .onError((error, stackTrace) {
               if (error is DioError) {
