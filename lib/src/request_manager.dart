@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'http_request.dart';
 import 'error_interceptor.dart';
@@ -28,7 +29,9 @@ class RequestManager {
       };
     }*/
     _dio.interceptors.add(ErrorInterceptor());
-    _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
+    if (kDebugMode) {
+      _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
+    }
     init(_refreshTokenInterceptor);
   }
 
