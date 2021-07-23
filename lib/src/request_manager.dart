@@ -28,11 +28,10 @@ class RequestManager {
         };
       };
     }*/
-    _dio.interceptors.add(ErrorInterceptor());
     if (kDebugMode) {
       _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
     }
-    init(_refreshTokenInterceptor);
+    // initInterceptor(_refreshTokenInterceptor);
   }
 
   static RequestManager _sharedInstance() {
@@ -42,11 +41,12 @@ class RequestManager {
     return _instance!;
   }
 
-  void init(Interceptor? interceptor) {
+  void initInterceptor(Interceptor? interceptor) {
     _refreshTokenInterceptor = interceptor;
     if (_refreshTokenInterceptor != null) {
       _dio.interceptors.add(_refreshTokenInterceptor!);
     }
+    _dio.interceptors.add(ErrorInterceptor());
   }
 
   void addRequest(BaseHttpRequest request) {
