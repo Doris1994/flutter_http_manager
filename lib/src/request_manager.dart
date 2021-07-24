@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'http_request.dart';
@@ -28,10 +29,20 @@ class RequestManager {
         };
       };
     }*/
+
     if (kDebugMode) {
       _dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
     }
     // initInterceptor(_refreshTokenInterceptor);
+    if (kIsWeb) return;
+    //DefaultHttpClientAdapter();
+    _dio.httpClientAdapter = Http2Adapter(
+      ConnectionManager(
+        idleTimeout: 3000,
+        // Ignore bad certificate
+        onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
+      ),
+    );
   }
 
   static RequestManager _sharedInstance() {
@@ -51,10 +62,13 @@ class RequestManager {
 
   void addRequest(BaseHttpRequest request) {
     String url = request.baseUrl + request.path;
+    Map<String, dynamic> headers =
+        request.headers.map((key, value) => MapEntry(key.toLowerCase(), value));
+    debugPrint(headers.toString());
     Options options = Options(
         sendTimeout: request.sendTimeout,
         receiveTimeout: request.receiveTimeout,
-        headers: request.headers);
+        headers: headers);
     try {
       switch (request.method) {
         case HttpRequestMethod.get:

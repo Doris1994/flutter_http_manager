@@ -57,6 +57,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.0"
+  dio_http2_adapter:
+    dependency: transitive
+    description:
+      name: dio_http2_adapter
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -81,6 +88,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  http2:
+    dependency: transitive
+    description:
+      name: http2
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
   http_parser:
     dependency: transitive
     description:
