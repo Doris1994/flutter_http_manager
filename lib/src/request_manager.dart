@@ -98,17 +98,30 @@ class RequestManager {
   }
 
   void _errorHandler(BaseHttpRequest request, DioError error) {
-    if (CancelToken.isCancel(error)) {
-      print('Request canceled! ' + error.message);
-      request.status = HttpRequestStatus.canceled;
-    } else {
-      request.status = HttpRequestStatus.finished;
+    if (!redirectUrl(request, error)) {
+      if (CancelToken.isCancel(error)) {
+        print('Request canceled! ' + error.message);
+        request.status = HttpRequestStatus.canceled;
+      } else {
+        request.status = HttpRequestStatus.finished;
+      }
+      request.didFinishFailure(error.error);
     }
-    request.didFinishFailure(error.error);
   }
 
   void _responseHandler(BaseHttpRequest request, Response<dynamic> value) {
     request.status = HttpRequestStatus.finished;
     request.didFinishSuccess(value);
+  }
+
+  bool redirectUrl(BaseHttpRequest request, DioError error) {
+    if (error.response?.statusCode == 301 ||
+        error.response?.statusCode == 302) {
+      Response<dynamic> value = Response(requestOptions: RequestOptions(path: ''));
+      value.data=error.response?.headers.map['location']!.first;
+      _responseHandler(request, value);
+      return true;
+    }
+    return false;
   }
 }
