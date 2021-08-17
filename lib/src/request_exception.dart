@@ -1,5 +1,23 @@
 import 'package:dio/dio.dart';
 
+/// Text delegate that exception text in widgets.
+class ExceptionTextDelegate {
+  String get requestCancel => 'Request Cancel';
+  String get connectTimeOut => 'Connect Timeout';
+  String get sendTimeOut => 'Send Timeout';
+  String get receiveTimeOut => 'Reveive Timeout';
+  String get errorCode400 => 'Bad Request';
+  String get errorCode401 => 'Unauthorized';
+  String get errorCode403 => 'Server Rejected Request';
+  String get errorCode404 => 'Not Found';
+  String get errorCode405 => 'Method Disabled';
+  String get errorCode500 => 'Server Internal Error';
+  String get errorCode502 => 'Fault Gateway';
+  String get errorCode503 => 'Service is not available';
+  String get errorCode505 => 'Unsupported HTTP version';
+  String get unknownError => 'Unknown Error';
+}
+
 /// 自定义异常
 class RequestException implements Exception {
   final String? _message;
@@ -13,75 +31,80 @@ class RequestException implements Exception {
     return "code: $_code---message: $_message";
   }
 
-  factory RequestException.create(DioError error) {
+  factory RequestException.create(
+      DioError error, ExceptionTextDelegate textDelegate) {
     switch (error.type) {
       case DioErrorType.cancel:
         {
-          return BadRequestException(-1, "请求取消");
+          return BadRequestException(-1, textDelegate.requestCancel);
         }
       case DioErrorType.connectTimeout:
         {
-          return BadRequestException(-1, "连接超时");
+          return BadRequestException(-1, textDelegate.connectTimeOut);
         }
       case DioErrorType.sendTimeout:
         {
-          return BadRequestException(-1, "请求超时");
+          return BadRequestException(-1, textDelegate.sendTimeOut);
         }
       case DioErrorType.receiveTimeout:
         {
-          return BadRequestException(-1, "响应超时");
+          return BadRequestException(-1, textDelegate.receiveTimeOut);
         }
       case DioErrorType.response:
         {
           try {
             int errCode = error.response?.statusCode ?? -1;
-            // String errMsg = error.response.statusMessage;
-            // return ErrorEntity(code: errCode, message: errMsg);
             switch (errCode) {
               case 400:
                 {
-                  return BadRequestException(errCode, "请求语法错误");
+                  return BadRequestException(
+                      errCode, textDelegate.errorCode400);
                 }
               case 401:
                 {
-                  return UnauthorisedException(errCode, "没有权限");
+                  return UnauthorisedException(
+                      errCode, textDelegate.errorCode401);
                 }
               case 403:
                 {
-                  return UnauthorisedException(errCode, "服务器拒绝执行");
+                  return UnauthorisedException(
+                      errCode, textDelegate.errorCode403);
                 }
               case 404:
                 {
-                  return UnauthorisedException(errCode, "无法连接服务器");
+                  return UnauthorisedException(
+                      errCode, textDelegate.errorCode404);
                 }
               case 405:
                 {
-                  return UnauthorisedException(errCode, "请求方法被禁止");
+                  return UnauthorisedException(
+                      errCode, textDelegate.errorCode405);
                 }
               case 500:
                 {
-                  return BadServiceException(errCode, "服务器内部错误");
+                  return BadServiceException(
+                      errCode, textDelegate.errorCode500);
                 }
               case 502:
                 {
-                  return BadServiceException(errCode, "无效的请求");
+                  return BadServiceException(
+                      errCode, textDelegate.errorCode502);
                 }
               case 503:
                 {
-                  return BadServiceException(errCode, "服务器挂了");
-                }
-              case 505:
-                {
-                  return UnauthorisedException(errCode, "不支持HTTP协议请求");
+                  return BadServiceException(
+                      errCode, textDelegate.errorCode503);
                 }
               default:
                 {
                   return UnknownException(
-                      errCode, error.response?.statusMessage ?? '未知错误');
+                      errCode,
+                      error.response?.statusMessage ??
+                          textDelegate.unknownError);
                 }
             }
           } on Exception catch (_) {
-            return UnknownException(-1, "未知错误");
+            return UnknownException(-1, textDelegate.unknownError);
           }
         }
       default:

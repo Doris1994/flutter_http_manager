@@ -1,11 +1,9 @@
-import 'dart:io';
-
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'http_request.dart';
 import 'error_interceptor.dart';
+import 'request_exception.dart';
 
 class RequestManager {
   final Dio _dio = Dio();
@@ -41,12 +39,12 @@ class RequestManager {
     return _instance!;
   }
 
-  void initInterceptor(Interceptor? interceptor) {
+  void initInterceptor(Interceptor? interceptor,{ExceptionTextDelegate? delegate}) {
     _refreshTokenInterceptor = interceptor;
     if (_refreshTokenInterceptor != null) {
       _dio.interceptors.add(_refreshTokenInterceptor!);
     }
-    _dio.interceptors.add(ErrorInterceptor());
+    _dio.interceptors.add(ErrorInterceptor(delegate: delegate ?? ExceptionTextDelegate()));
   }
 
   void addRequest(BaseHttpRequest request) {
