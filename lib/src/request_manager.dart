@@ -39,12 +39,14 @@ class RequestManager {
     return _instance!;
   }
 
-  void initInterceptor(Interceptor? interceptor,{ExceptionTextDelegate? delegate}) {
+  void initInterceptor(Interceptor? interceptor,
+      {ExceptionTextDelegate? delegate}) {
     _refreshTokenInterceptor = interceptor;
     if (_refreshTokenInterceptor != null) {
       _dio.interceptors.add(_refreshTokenInterceptor!);
     }
-    _dio.interceptors.add(ErrorInterceptor(delegate: delegate ?? ExceptionTextDelegate()));
+    _dio.interceptors
+        .add(ErrorInterceptor(delegate: delegate ?? ExceptionTextDelegate()));
   }
 
   void addRequest(BaseHttpRequest request) {
@@ -52,6 +54,7 @@ class RequestManager {
     Options options = Options(
         sendTimeout: request.sendTimeout,
         receiveTimeout: request.receiveTimeout,
+        responseType: request.responseType,
         headers: request.headers);
     try {
       switch (request.method) {
@@ -115,8 +118,9 @@ class RequestManager {
   bool redirectUrl(BaseHttpRequest request, DioError error) {
     if (error.response?.statusCode == 301 ||
         error.response?.statusCode == 302) {
-      Response<dynamic> value = Response(requestOptions: RequestOptions(path: ''));
-      value.data=error.response?.headers.map['location']!.first;
+      Response<dynamic> value =
+          Response(requestOptions: RequestOptions(path: ''));
+      value.data = error.response?.headers.map['location']!.first;
       _responseHandler(request, value);
       return true;
     }

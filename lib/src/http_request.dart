@@ -24,6 +24,8 @@ abstract class BaseHttpRequest {
   String get path;
   HttpRequestMethod get method => HttpRequestMethod.get;
 
+  ResponseType get responseType => ResponseType.json;
+
   Map<String, dynamic> get headers => {};
   dynamic get parameters => null;
 
