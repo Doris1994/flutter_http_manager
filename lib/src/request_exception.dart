@@ -109,7 +109,7 @@ class RequestException implements Exception {
         }
       default:
         {
-          return RequestException(-1, error.message);
+          return UnknownException(-1, error.message);
         }
     }
   }

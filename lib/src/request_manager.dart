@@ -56,6 +56,9 @@ class RequestManager {
         receiveTimeout: request.receiveTimeout,
         responseType: request.responseType,
         headers: request.headers);
+
+    _dio.options.baseUrl = request.baseUrl;
+    _dio.options.connectTimeout = request.connectTimeout;
     try {
       switch (request.method) {
         case HttpRequestMethod.get:
