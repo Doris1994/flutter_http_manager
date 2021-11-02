@@ -11,6 +11,7 @@ class ExceptionTextDelegate {
   String get errorCode403 => 'Server Rejected Request';
   String get errorCode404 => 'Not Found';
   String get errorCode405 => 'Method Disabled';
+  String get errorCode412 => 'Signature Verification Error';
   String get errorCode500 => 'Server Internal Error';
   String get errorCode502 => 'Fault Gateway';
   String get errorCode503 => 'Service is not available';
@@ -20,10 +21,14 @@ class ExceptionTextDelegate {
 
 /// 自定义异常
 class RequestException implements Exception {
-  final String? _message;
+  String? _message;
   String get message => _message ?? this.runtimeType.toString();
   final int? _code;
   int get code => _code ?? -1;
+
+  set message(String newMsg) {
+    _message = newMsg;
+  }
 
   RequestException([this._code, this._message]);
 
@@ -79,6 +84,11 @@ class RequestException implements Exception {
                 {
                   return UnauthorisedException(
                       errCode, textDelegate.errorCode405);
+                }
+              case 412: //签名未通过
+                {
+                  return UnauthorisedException(
+                      errCode, textDelegate.errorCode412);
                 }
               case 500:
                 {

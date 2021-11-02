@@ -73,6 +73,12 @@ class RequestManager {
                 .onError((error, stackTrace) {
               if (error is DioError) {
                 _errorHandler(request, error);
+              } else {
+                _errorHandler(
+                    request,
+                    DioError(
+                        requestOptions: RequestOptions(path: request.path),
+                        error: error));
               }
             });
           }
@@ -89,6 +95,12 @@ class RequestManager {
                 .onError((error, stackTrace) {
               if (error is DioError) {
                 _errorHandler(request, error);
+              } else {
+                _errorHandler(
+                    request,
+                    DioError(
+                        requestOptions: RequestOptions(path: request.path),
+                        error: error));
               }
             });
           }
@@ -96,8 +108,16 @@ class RequestManager {
         default:
           debugPrint('request manager not this method ===: ${request.method}');
       }
-    } on DioError catch (error) {
-      _errorHandler(request, error);
+    } catch (error) {
+      if (error is DioError) {
+        _errorHandler(request, error);
+      } else {
+        _errorHandler(
+            request,
+            DioError(
+                requestOptions: RequestOptions(path: request.path),
+                error: error));
+      }
     }
   }
 
@@ -109,7 +129,11 @@ class RequestManager {
       } else {
         request.status = HttpRequestStatus.finished;
       }
-      request.didFinishFailure(error.error);
+      if (error.error is RequestException) {
+        request.didFinishFailure(error.error);
+      } else {
+        request.didFinishFailure(UnknownException(-1, error.message));
+      }
     }
   }
 
