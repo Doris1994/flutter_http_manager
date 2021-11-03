@@ -41,7 +41,7 @@ class RequestException implements Exception {
     switch (error.type) {
       case DioErrorType.cancel:
         {
-          return BadRequestException(-1, textDelegate.requestCancel);
+          return BadRequestException(600, textDelegate.requestCancel);
         }
       case DioErrorType.connectTimeout:
         {
