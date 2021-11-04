@@ -132,6 +132,10 @@ class RequestManager {
       if (error.error is RequestException) {
         request.didFinishFailure(error.error);
       } else {
+        if(request.status == HttpRequestStatus.canceled){
+          request.didFinishFailure(UnknownException(600, error.message));
+          return;
+        }
         request.didFinishFailure(UnknownException(-1, error.message));
       }
     }
