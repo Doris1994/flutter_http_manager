@@ -143,3 +143,7 @@ class UnauthorisedException extends RequestException {
 class UnknownException extends RequestException {
   UnknownException(int code, String message) : super(code, message);
 }
+
+class ResponseFailException extends RequestException {
+  ResponseFailException([int? code, String? message]) : super(code, message);
+}
